@@ -1,26 +1,7 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Currencies } from './currencies.entity';
+import { CurrenciesRepository } from './currencies.repository';
 
-export class Currencies {
-  currency: string;
-  value: number;
-}
-export class CurrenciesRepository {
-  async getCurrency(currency: string): Promise<Currencies> {
-    return new Currencies();
-  }
-
-  async createCurrency({ currency, value }): Promise<Currencies> {
-    return new Currencies();
-  }
-
-  async updateCurrency({ currency, value }): Promise<Currencies> {
-    return new Currencies();
-  }
-
-  async deleteCurrency(currency: string): Promise<void> {
-    return;
-  }
-}
 @Injectable()
 export class CurrenciesService {
   constructor(private currenciesRepository: CurrenciesRepository) {}
