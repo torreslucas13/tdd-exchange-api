@@ -11,6 +11,7 @@ describe('CurrenciesService', () => {
     const currenciesRepositoryMock = {
       getCurrency: jest.fn(),
       createCurrency: jest.fn(),
+      updateCurrency: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -86,6 +87,41 @@ describe('CurrenciesService', () => {
       it('should return when repository returns', async () => {
         (repository.createCurrency as jest.Mock).mockReturnValue(mockData);
         expect(await service.createCurrency(mockData)).toEqual(mockData);
+      });
+    });
+
+    describe('updateCurrency()', async () => {
+      it('should be throw if repository throw', async () => {
+        (repository.updateCurrency as jest.Mock).mockRejectedValue(
+          new InternalServerErrorException(),
+        );
+
+        mockData.currency = 'INVALID';
+
+        await expect(service.updateCurrency(mockData)).rejects.toThrow(
+          new InternalServerErrorException(),
+        );
+      });
+
+      it('should be not throw if repository returns', async () => {
+        await expect(service.updateCurrency(mockData)).resolves.not.toThrow();
+      });
+
+      it('should be called repository with correct params', async () => {
+        await service.updateCurrency(mockData);
+        expect(repository.updateCurrency).toBeCalledWith(mockData);
+      });
+
+      it('should be throw if value <=0', async () => {
+        mockData.value = 0;
+        await expect(service.updateCurrency(mockData)).rejects.toThrow(
+          new BadRequestException('The value must be great than zero'),
+        );
+      });
+
+      it('should return when repository returns', async () => {
+        (repository.updateCurrency as jest.Mock).mockReturnValue(mockData);
+        expect(await service.updateCurrency(mockData)).toEqual(mockData);
       });
     });
   });
